@@ -1,0 +1,13 @@
+TODO:
+- Make branches by hosts
+- Lua functions:
+    - clone
+    - copy/paste
+    - file
+- Commands:
+    - run
+    - pull
+    - push
+    - remote
+    - config:
+        - DONE 
