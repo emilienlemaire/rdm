@@ -5,8 +5,8 @@ mod config;
 mod config_command;
 mod init_command;
 mod lockfile;
-mod lua_runtime;
 mod rdm_error;
+mod run_command;
 mod utils;
 
 use std::process::exit;
@@ -21,13 +21,6 @@ use rdm_error::RdmError;
 //  * Manage hosts by branches
 //  * Enable copy paste in Lua
 fn main() {
-    // simplelog::TermLogger::init(
-    //     log::LevelFilter::Trace,
-    //     simplelog::Config::default(),
-    //     simplelog::TerminalMode::Mixed,
-    //     simplelog::ColorChoice::Auto)
-    //     .unwrap();
-
     rdm_log::MainLogger::set_as_logger().unwrap();
 
     let args = Args::parse();
@@ -49,6 +42,9 @@ fn main() {
                 }
                 Commands::Bootstrap => {
                     bootstrap_command::run(config).map_err(RdmError::from)
+                }
+                Commands::Run => {
+                    run_command::run(config).map_err(RdmError::from)
                 }
                 _ => Ok(()),
             },

@@ -14,6 +14,10 @@ pub(crate) enum LockFileError {
     TomlDeError(toml::de::Error),
     #[doc_to_string]
     GitError(git2::Error),
+    #[doc_to_string]
+    TomlSerError(toml::ser::Error),
+    #[doc_to_string]
+    EnvError(std::env::VarError),
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -26,7 +30,7 @@ pub(crate) struct TomlConfig {
 impl TomlConfig {
     pub(crate) fn new(
         repo_path: &Option<String>,
-        worktree: &Option<String>,
+        worktree: &Option<&str>,
     ) -> Result<TomlConfig, LockFileError> {
         let repo_path = match repo_path {
             None => {
@@ -38,7 +42,7 @@ impl TomlConfig {
 
         let worktree_path = match worktree {
             None => {
-                let p = "$HOME".to_string();
+                let p = std::env::var("HOME")?;
                 std::fs::canonicalize(p)?.to_string_lossy().to_string()
             }
             Some(path) => {
@@ -62,7 +66,7 @@ impl TomlConfig {
 # It is not intended for manual editing."#
             .to_string();
 
-        let toml = toml::to_string(self).unwrap();
+        let toml = toml::to_string(self)?;
 
         let str = format!("{}\n{}", str, toml);
         if !path.exists() {
@@ -100,18 +104,18 @@ pub(crate) fn increment_revision(config: &Config) -> Result<(), LockFileError> {
         ..conf
     };
 
-    new_config.save(&lockfile_path).unwrap();
+    new_config.save(&lockfile_path)?;
 
     let repo = &config.repo;
-    let mut index = repo.index().unwrap();
+    let mut index = repo.index()?;
 
     let worktree_abs = std::fs::canonicalize(&config.worktree_path)?;
     let lockfile_abs = std::fs::canonicalize(&lockfile_path)?;
 
-    index
-        .add_path(&pathdiff::diff_paths(&lockfile_abs, &worktree_abs).unwrap())
-        .unwrap();
-    index.write().unwrap();
+    index.add_path(
+        &pathdiff::diff_paths(&lockfile_abs, &worktree_abs).unwrap(),
+    )?;
+    index.write()?;
 
     Ok(())
 }

@@ -89,7 +89,7 @@ pub(crate) fn run(
             }
             std::fs::canonicalize(path)?
         }
-        None => PathBuf::from(std::env!("HOME")),
+        None => std::env::current_dir()?,
     };
 
     let mut opts = RepositoryInitOptions::new();
@@ -139,7 +139,6 @@ pub(crate) fn run(
 
     let lock_path = match &config_path {
         Some(path) => {
-            println!("{:#?}", path);
             let mut path = PathBuf::from(path);
             path.pop();
             path.push("rdm.lock");
@@ -153,7 +152,7 @@ pub(crate) fn run(
         }
     };
 
-    let conf = TomlConfig::new(&repo_path, &worktree)?;
+    let conf = TomlConfig::new(&repo_path, &worktree_path.to_str())?;
     conf.save(&lock_path)?;
 
     let abs_worktree = std::fs::canonicalize(&worktree_path)?;

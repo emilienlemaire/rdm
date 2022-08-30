@@ -42,7 +42,9 @@ pub(super) fn run(
 
     let mut index = repo.index()?;
 
-    let _ = path.iter().try_for_each(|path| {
+    println!("{:#?}", path);
+
+    path.iter().try_for_each(|path| {
         let abs_path = std::fs::canonicalize(path)?;
         let rel_path =
             pathdiff::diff_paths(abs_path, &config.worktree_path).unwrap();

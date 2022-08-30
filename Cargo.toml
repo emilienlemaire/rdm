@@ -2,22 +2,24 @@
 name = "rdm"
 version = "0.1.0"
 edition = "2021"
+license = "Apache-2.0"
+description = "A config/dotfiles manager based on git and written in rust."
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-rdm-macros = {path = "crates/rdm-macros" }
 clap = { version = "3.2.14", features = ["derive", "env"] }
-shellexpand = "2.1"
-mlua = { version = "0.8.1", features = ["luajit"] }
-git2 = "0.14.4"
-toml = "0.5.9"
-pathdiff = "0.2.1"
-serde = {version = "1.0.140", features = ["derive"] }
-rdm-log = { path = "crates/rdm-log" }
-log = "0.4.17"
-simplelog = "0.12.0"
-curl = "0.4.44"
-run_script = "0.10.0"
-pretty = "0.11.3"
 console = "0.15.1"
+curl = "0.4.44"
+git2 = "0.14.4"
+log = "0.4.17"
+mlua = { version = "0.8.1", features = ["luajit"] }
+pathdiff = "0.2.1"
+pretty = "0.11.3"
+rdm-log = { path = "crates/rdm-log" }
+rdm-lua = { path = "crates/rdm-lua" }
+rdm-macros = {path = "crates/rdm-macros" }
+run_script = "0.10.0"
+serde = {version = "1.0.140", features = ["derive"] }
+shellexpand = "2.1"
+toml = "0.5.9"

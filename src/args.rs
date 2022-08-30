@@ -34,26 +34,8 @@ pub(crate) enum Commands {
     Config(ConfigSubCommand),
     /// Run the `bootstrap.lua` file.
     Bootstrap,
-    /// Pull your configuration from a remote repository
-    Pull {
-        /// Select the name of the remote repository from your configuration file.
-        #[clap(value_parser)]
-        remote: Option<String>,
-    },
-    /// Push your configuration to a remote repository. If new changes have been made since the
-    /// last synchronization, then they are committed.
-    Push {
-        /// Select the name of the remote repository from your configuration file.
-        #[clap(value_parser)]
-        remote: Option<String>,
-        /// Ignore the synchronization
-        #[clap(short, long, value_parser)]
-        no_sync: bool,
-        /// Override the default synchronization message, is ignored if --no-sync or no changes
-        /// have been made since the last synchronization.
-        #[clap(short, long, value_parser)]
-        message: Option<String>,
-    },
+    /// Run the `init.lua` file.
+    Run,
 }
 
 #[derive(Debug, Subcommand)]

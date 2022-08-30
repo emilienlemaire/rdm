@@ -1,6 +1,8 @@
 use rdm_macros::{FromError, ToDoc};
 
-use crate::{bootstrap_command, config, config_command, init_command};
+use crate::{
+    bootstrap_command, config, config_command, init_command, run_command,
+};
 
 #[derive(Debug, FromError, ToDoc)]
 #[doc_prefix = "Rdm Error:"]
@@ -10,4 +12,5 @@ pub(crate) enum RdmError {
     ConfigCommandError(config_command::ConfigCommandError),
     InitCommandError(init_command::InitError),
     BootstrapError(bootstrap_command::BootstrapError),
+    RunCommandError(run_command::RunCommandError),
 }

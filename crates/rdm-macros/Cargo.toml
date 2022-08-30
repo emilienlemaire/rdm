@@ -2,6 +2,8 @@
 name = "rdm-macros"
 version = "0.1.0"
 edition = "2021"
+license = "Apache-2.0"
+description = "A library with derive macros used in `rdm'"
 
 [lib]
 proc-macro = true
@@ -9,6 +11,6 @@ proc-macro = true
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+proc-macro2 = "1.0"
 quote = "1.0"
 syn = { version = "1.0", features = ["full", "extra-traits"] }
-proc-macro2 = "1.0"

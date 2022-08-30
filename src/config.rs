@@ -2,10 +2,12 @@ use rdm_macros::{FromError, ToDoc};
 
 use crate::args::Args;
 use crate::lockfile::{self, TomlConfig};
-use crate::{lua_runtime, utils};
+use crate::utils;
 use std::path::PathBuf;
 
+/// Internal rdm configuration
 pub(crate) struct Config {
+    /// Path to the rdm configuration directory
     pub(crate) config_path: PathBuf,
     pub(crate) repo_path: PathBuf,
     pub(crate) worktree_path: PathBuf,
@@ -25,7 +27,7 @@ pub(crate) enum ConfigError {
     GitError(git2::Error),
     #[doc_to_string]
     IOError(std::io::Error),
-    LuaRuntimeError(lua_runtime::RuntimeError),
+    LuaRuntimeError(rdm_lua::RuntimeError),
 }
 
 impl Config {
@@ -56,7 +58,7 @@ impl Config {
         let repo = git2::Repository::open_bare(&repo_path)?;
         repo.set_workdir(worktree_path.as_path(), false)?;
 
-        let lua = lua_runtime::init_lua_runtime()?;
+        let lua = rdm_lua::init(repo_path.clone(), worktree_path.clone())?;
 
         Ok(Config {
             config_path,
