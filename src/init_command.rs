@@ -27,6 +27,8 @@ pub(crate) enum InitError {
     #[no_from]
     ConfigFileNotLuaError(String),
     LockFileError(lockfile::LockFileError),
+    #[doc_to_string]
+    EnvError(std::env::VarError),
 }
 
 pub(crate) fn run(
@@ -36,8 +38,10 @@ pub(crate) fn run(
 ) -> Result<(), InitError> {
     let repo_path_buf = match &repo_path {
         None => {
-            let current_dir = std::env::current_dir();
-            current_dir?
+            let home = std::env::var("HOME")?;
+            let mut home_path = PathBuf::from(home);
+            home_path.push(".config/rdm/repo");
+            home_path
         }
         Some(path) => PathBuf::from(path),
     };

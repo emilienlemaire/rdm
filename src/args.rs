@@ -17,7 +17,7 @@ pub(crate) enum Commands {
     /// Initialize the rdm folders and local repository.
     Init {
         /// Path to the local bare repository to create, if none is provided then then default is
-        /// your current directory.
+        /// `~/config/rdm/repo`.
         #[clap(long, short, value_parser)]
         repo: Option<String>,
         /// If given, then a default configuration file will be created at this location, if not
@@ -25,7 +25,8 @@ pub(crate) enum Commands {
         /// at this location.
         #[clap(long, short, value_parser)]
         config: Option<String>,
-        /// Path of the git worktree, if none is given then it defaults to `$HOME`.
+        /// Path of the git worktree, if none is given then it defaults to your
+        /// current directory.
         #[clap(long, short, value_parser)]
         worktree: Option<String>,
     },
