@@ -1,4 +1,5 @@
 mod add_subcommand;
+mod remote_commands;
 mod save_subcommand;
 mod status_subcommand;
 mod update_subcommand;
@@ -14,6 +15,7 @@ pub(crate) enum ConfigCommandError {
     UpdateSubcommandError(update_subcommand::UpdateSubcommandError),
     StatusSubcommandError(status_subcommand::StatusSubcommandError),
     SaveSubcommandError(save_subcommand::SaveSubcommandError),
+    RemoteSubCommandError(remote_commands::RemoteError),
 }
 
 pub(crate) fn run(
@@ -29,6 +31,9 @@ pub(crate) fn run(
             status_subcommand::run(config, untracked)?
         }
         ConfigSubCommand::Save => save_subcommand::run(config)?,
+        ConfigSubCommand::Remote(sub_command) => {
+            remote_commands::run(config, sub_command)?
+        }
     };
 
     Ok(())

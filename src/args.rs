@@ -64,4 +64,27 @@ pub(crate) enum ConfigSubCommand {
     /// Save the current state of your config. This will create a commit in the
     /// your local repository with a generated message.
     Save,
+    /// Manage the config remotes
+    #[clap(subcommand)]
+    Remote(RemoteSubCommand),
+}
+
+#[derive(Debug, Subcommand)]
+pub(crate) enum RemoteSubCommand {
+    /// Add a remote to your config.
+    Add {
+        /// The name of the remote
+        name: String,
+        /// The url of the remote
+        url: String,
+        // TODO: Figure this out
+        // #[clap(short, long, value_parser)]
+        // default: bool,
+    },
+    /// Remove a remote from your config.
+    Remove { name: String },
+    // TODO: Figure this out
+    // Default { name: String },
+    /// List all remotes
+    List,
 }
