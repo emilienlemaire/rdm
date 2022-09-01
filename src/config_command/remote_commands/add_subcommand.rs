@@ -1,7 +1,8 @@
-use git2::{BranchType, Cred, Direction, RemoteCallbacks};
 use rdm_macros::{FromError, ToDoc};
 
-use crate::config::Config;
+use crate::{
+    config::Config, config_command::remote_commands::default_subcommand,
+};
 
 #[derive(Debug, FromError, ToDoc)]
 #[doc_prefix = "add error:"]
@@ -11,16 +12,16 @@ pub(crate) enum RemoteAddError {
     GitError(git2::Error),
     #[doc_format(format_str = "Remote {} already exists.", _1)]
     AlreadyExists(String),
-    // #[doc_text = "Cannot add default remote when the HEAD is not a branch."]
-    // HeadNoBranch,
+    DefaultError(default_subcommand::DefaultError),
 }
 
 pub(super) fn run(
     config: Config,
     name: String,
     url: String,
+    default: bool,
 ) -> Result<(), RemoteAddError> {
-    let repo = config.repo;
+    let repo = &config.repo;
 
     match repo.find_remote(name.as_str()) {
         Err(_) => (),
@@ -29,6 +30,10 @@ pub(super) fn run(
 
     repo.remote(&name, &url)?;
     log::info!("Remote `{}' was added with url: {}", name, url);
+
+    if default {
+        default_subcommand::run(config, name)?;
+    }
 
     Ok(())
 }

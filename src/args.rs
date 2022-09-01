@@ -41,15 +41,15 @@ pub(crate) enum Commands {
 
 #[derive(Debug, Subcommand)]
 pub(crate) enum ConfigSubCommand {
-    /// Add files or folders to your config
+    /// Add files or folders to your config.
     Add {
-        /// Path for files or folder ot be added to the configuration
+        /// Path for files or folder ot be added to the configuration.
         #[clap(required = true, value_parser)]
         path: Vec<PathBuf>,
     },
     /// Stage the changes
     Update {
-        /// If given only stage the paths given, otherwise stage all the changes
+        /// If given only stage the paths given, otherwise stage all the changes.
         #[clap(value_parser)]
         path: Vec<PathBuf>,
     },
@@ -57,14 +57,14 @@ pub(crate) enum ConfigSubCommand {
     /// files that have not been updated yet in your config, run `config update`
     /// to fix it.
     Status {
-        /// If you want to show untracked files of your config
+        /// Show untracked files in the status.
         #[clap(value_parser, short, long)]
         untracked: bool,
     },
     /// Save the current state of your config. This will create a commit in the
     /// your local repository with a generated message.
     Save,
-    /// Manage the config remotes
+    /// Manage the config remotes.
     #[clap(subcommand)]
     Remote(RemoteSubCommand),
 }
@@ -73,18 +73,18 @@ pub(crate) enum ConfigSubCommand {
 pub(crate) enum RemoteSubCommand {
     /// Add a remote to your config.
     Add {
-        /// The name of the remote
+        /// The name of the remote.
         name: String,
-        /// The url of the remote
+        /// The url of the remote.
         url: String,
-        // TODO: Figure this out
-        // #[clap(short, long, value_parser)]
-        // default: bool,
+        /// Set this remote as the default push remote.
+        #[clap(short, long, value_parser)]
+        default: bool,
     },
     /// Remove a remote from your config.
     Remove { name: String },
-    // TODO: Figure this out
-    // Default { name: String },
+    /// Set the default push/fetch remote.
+    Default { name: String },
     /// List all remotes
     List,
 }
