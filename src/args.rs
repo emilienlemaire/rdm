@@ -30,7 +30,7 @@ pub(crate) enum Commands {
         #[clap(long, short, value_parser)]
         worktree: Option<String>,
     },
-    /// Manage your configuration
+    /// Manage your configuration git repository.
     #[clap(subcommand)]
     Config(ConfigSubCommand),
     /// Run the `bootstrap.lua` file.
@@ -67,6 +67,10 @@ pub(crate) enum ConfigSubCommand {
     /// Manage the config remotes.
     #[clap(subcommand)]
     Remote(RemoteSubCommand),
+    /// Push your configuration to the default remote.
+    Push,
+    /// Pull your configuration from the default remote.
+    Pull,
 }
 
 #[derive(Debug, Subcommand)]
