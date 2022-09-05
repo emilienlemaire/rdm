@@ -1,5 +1,7 @@
 use std::{fs::File, io::Write, path::PathBuf};
 
+use gethostname::gethostname;
+use git2::build::CheckoutBuilder;
 use git2::{Repository, RepositoryInitOptions};
 use rdm_macros::{FromError, ToDoc};
 
@@ -73,13 +75,13 @@ pub(crate) fn run(
         Some(ext) => {
             if ext != "lua" {
                 return Err(InitError::ConfigFileNotLuaError(
-                    config_path_buf.into_os_string().into_string().unwrap(),
+                    config_path_buf.to_str().unwrap().to_string(),
                 ));
             }
         }
         _ => {
             return Err(InitError::ConfigFileNotLuaError(
-                config_path_buf.into_os_string().into_string().unwrap(),
+                config_path_buf.to_str().unwrap().to_string(),
             ))
         }
     };
@@ -163,26 +165,32 @@ pub(crate) fn run(
     let abs_lock_path = std::fs::canonicalize(&lock_path)?;
     let abs_config_path = std::fs::canonicalize(&config_path_buf)?;
 
-    index
-        .add_path(&pathdiff::diff_paths(abs_lock_path, &abs_worktree).unwrap())
-        .unwrap();
-    index
-        .add_path(
-            &pathdiff::diff_paths(abs_config_path, &abs_worktree).unwrap(),
-        )
-        .unwrap();
-    index.add_path(rel_gitignore_path.as_path()).unwrap();
-    index.write().unwrap();
+    index.add_path(
+        &pathdiff::diff_paths(abs_lock_path, &abs_worktree).unwrap(),
+    )?;
+    index.add_path(
+        &pathdiff::diff_paths(abs_config_path, &abs_worktree).unwrap(),
+    )?;
+    index.add_path(rel_gitignore_path.as_path())?;
+    index.write()?;
 
-    repo.commit(
+    let oid = repo.commit(
         Some("HEAD"),
         &repo.signature()?,
         &repo.signature()?,
         "Initial commit",
         &repo.find_tree(index.write_tree()?)?,
         &[],
-    )
-    .unwrap();
+    )?;
+
+    let commit = repo.find_commit(oid)?;
+
+    let host = gethostname().into_string().unwrap();
+
+    let host_branch = repo.branch(&host, &commit, true)?;
+
+    repo.set_head(host_branch.get().name().unwrap())?;
+    repo.checkout_head(Some(CheckoutBuilder::default().force()))?;
 
     log::info!("Initial commit created.");
 

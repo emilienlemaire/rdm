@@ -8,7 +8,7 @@ mod update_subcommand;
 
 use rdm_macros::{FromError, ToDoc};
 
-use crate::{args::ConfigSubCommand, config::Config};
+use crate::{args::ConfigSubCommand, config::Config, run_command};
 
 #[derive(Debug, FromError, ToDoc)]
 #[doc_prefix = "Config Command Error:"]
@@ -20,12 +20,14 @@ pub(crate) enum ConfigCommandError {
     RemoteSubCommandError(remote_commands::RemoteError),
     PushSubcommandError(push_subcommand::PushError),
     PullSubcommandError(pull_subcommand::PullError),
+    RunError(run_command::RunCommandError),
 }
 
 pub(crate) fn run(
     sub_command: ConfigSubCommand,
     config: Config,
 ) -> Result<(), ConfigCommandError> {
+    run_command::run(&config)?;
     match sub_command {
         ConfigSubCommand::Add { path } => add_subcommand::run(config, path)?,
         ConfigSubCommand::Update { path } => {
@@ -34,12 +36,13 @@ pub(crate) fn run(
         ConfigSubCommand::Status { untracked } => {
             status_subcommand::run(config, untracked)?
         }
-        ConfigSubCommand::Save => save_subcommand::run(config)?,
         ConfigSubCommand::Remote(sub_command) => {
             remote_commands::run(config, sub_command)?
         }
+        ConfigSubCommand::Save => save_subcommand::run(config)?,
         ConfigSubCommand::Push => push_subcommand::run(config)?,
         ConfigSubCommand::Pull => pull_subcommand::run(config)?,
+        ConfigSubCommand::Run => (),
     };
 
     Ok(())

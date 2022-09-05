@@ -40,6 +40,11 @@ pub(super) fn run(config: Config) -> Result<(), PushError> {
 
         let remote_name = config.get_string(&remote_key)?;
 
+        cbs.transfer_progress(|_stats| {
+            println!("transfer progress");
+            true
+        });
+
         cbs.push_transfer_progress(move |current, total, bytes| {
             if current == 0 {
                 let (_, cols) = console::Term::stdout().size();
@@ -50,8 +55,10 @@ pub(super) fn run(config: Config) -> Result<(), PushError> {
                 pb.tick();
             } else if current == total {
                 pb.finish_with_message(format!("Sent {} bytes", bytes));
+                pb.tick();
             } else {
                 pb.set_position(current as u64);
+                pb.tick();
             }
         });
 

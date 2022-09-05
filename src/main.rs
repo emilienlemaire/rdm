@@ -43,9 +43,6 @@ fn main() {
                 Commands::Bootstrap => {
                     bootstrap_command::run(config).map_err(RdmError::from)
                 }
-                Commands::Run => {
-                    run_command::run(config).map_err(RdmError::from)
-                }
                 _ => Ok(()),
             },
         }

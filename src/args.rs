@@ -35,8 +35,6 @@ pub(crate) enum Commands {
     Config(ConfigSubCommand),
     /// Run the `bootstrap.lua` file.
     Bootstrap,
-    /// Run the `init.lua` file.
-    Run,
 }
 
 #[derive(Debug, Subcommand)]
@@ -71,6 +69,8 @@ pub(crate) enum ConfigSubCommand {
     Push,
     /// Pull your configuration from the default remote.
     Pull,
+    /// Only run the `init.lua` file
+    Run,
 }
 
 #[derive(Debug, Subcommand)]

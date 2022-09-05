@@ -1,6 +1,5 @@
 use std::{
-    fs::{self, DirEntry},
-    io,
+    fs,
     path::{Path, PathBuf},
 };
 

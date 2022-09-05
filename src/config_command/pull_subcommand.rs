@@ -1,6 +1,5 @@
 use git2::{
-    build::CheckoutBuilder, Cred, FetchOptions, IndexConflict, MergeAnalysis,
-    PushOptions, RemoteCallbacks,
+    build::CheckoutBuilder, Cred, FetchOptions, MergeAnalysis, RemoteCallbacks,
 };
 use indicatif::{ProgressBar, ProgressStyle};
 use rdm_macros::{FromError, ToDoc};

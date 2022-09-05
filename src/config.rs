@@ -9,7 +9,6 @@ use std::path::PathBuf;
 pub(crate) struct Config {
     /// Path to the rdm configuration directory
     pub(crate) config_path: PathBuf,
-    pub(crate) repo_path: PathBuf,
     pub(crate) worktree_path: PathBuf,
     pub(crate) repo: git2::Repository,
     pub(crate) lua: mlua::Lua,
@@ -58,11 +57,10 @@ impl Config {
         let repo = git2::Repository::open_bare(&repo_path)?;
         repo.set_workdir(worktree_path.as_path(), false)?;
 
-        let lua = rdm_lua::init(repo_path.clone(), worktree_path.clone())?;
+        let lua = rdm_lua::init(repo_path, worktree_path.clone())?;
 
         Ok(Config {
             config_path,
-            repo_path,
             repo,
             revision,
             worktree_path,

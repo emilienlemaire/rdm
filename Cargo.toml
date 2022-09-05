@@ -24,3 +24,5 @@ run_script = "0.10.0"
 serde = {version = "1.0.140", features = ["derive"] }
 shellexpand = "2.1"
 toml = "0.5.9"
+gethostname = "0.2.3"
+

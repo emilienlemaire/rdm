@@ -14,8 +14,8 @@ pub(crate) enum RunCommandError {
     LuaError(mlua::Error),
 }
 
-pub(crate) fn run(config: Config) -> Result<(), RunCommandError> {
-    let mut lua_init_file = config.config_path;
+pub(crate) fn run(config: &Config) -> Result<(), RunCommandError> {
+    let mut lua_init_file = config.config_path.clone();
 
     lua_init_file.push("init.lua");
 
